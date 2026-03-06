@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SurePoint — Differences Section</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif !important;
+    background: #0f0f0f;
+    color: #fff;
+  }
+
+  /* ── SECTION ── */
+  .diff-section {
+    width: 100%;
+    min-height: 100vh;
+    padding: 100px 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+  }
+
+  /* ── TOP: 헤딩 영역 ── */
+  .diff-header {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 520px;
+  }
+
+  .diff-heading {
+    font-size: clamp(44px, 5.5vw, 80px) !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    letter-spacing: -2px;
+    color: #fff !important;
+  }
+
+  .diff-sub {
+    font-size: clamp(14px, 1.3vw, 16px) !important;
+    font-weight: 400 !important;
+    line-height: 1.75 !important;
+    color: rgba(255,255,255,0.55) !important;
+    word-break: keep-all;
+  }
+
+  .diff-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.8) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    font-family: 'Pretendard', sans-serif !important;
+    text-decoration: none !important;
+    transition: all 0.25s;
+    width: fit-content;
+    letter-spacing: 0.3px;
+  }
+
+  .diff-cta:hover {
+    border-color: rgba(255,255,255,0.6);
+    color: #fff !important;
+  }
+
+  .diff-cta-arrow { transition: transform 0.25s; }
+  .diff-cta:hover .diff-cta-arrow { transform: translateX(4px); }
+
+  /* ── BOTTOM: 좌우 레이아웃 ── */
+  .diff-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: start;
+  }
+
+  /* ── LEFT: 아코디언 리스트 ── */
+  .diff-list {
+    display: flex;
+    flex-direction: column;
+    padding-right: 60px;
+  }
+
+  .diff-item {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 28px 0;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .diff-item:last-child {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* 활성화된 항목 왼쪽 파란 바 */
+  .diff-item.active::before {
+    content: '';
+    position: absolute;
+    left: -72px;
+    top: 0; bottom: 0;
+    width: 3px;
+    background: #2b5ce6;
+  }
+
+  .diff-item-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+  }
+
+  .diff-num {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: rgba(255,255,255,0.2) !important;
+    letter-spacing: 1px;
+    min-width: 24px;
+    transition: color 0.3s;
+  }
+
+  .diff-item.active .diff-num {
+    color: #2b5ce6 !important;
+  }
+
+  .diff-title {
+    font-size: clamp(14px, 1.2vw, 17px) !important;
+    font-weight: 600 !important;
+    color: rgba(255,255,255,0.35) !important;
+    line-height: 1.4 !important;
+    word-break: keep-all;
+    transition: color 0.3s;
+  }
+
+  .diff-item.active .diff-title,
+  .diff-item:hover .diff-title {
+    color: #fff !important;
+  }
+
+  /* 펼쳐지는 설명 */
+  .diff-body-text {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.35s ease;
+    opacity: 0;
+    padding-left: 44px;
+  }
+
+  .diff-item.active .diff-body-text {
+    max-height: 200px;
+    opacity: 1;
+  }
+
+  .diff-body-text p {
+    font-size: clamp(13px, 1.05vw, 15px) !important;
+    font-weight: 400 !important;
+    line-height: 1.8 !important;
+    color: rgba(255,255,255,0.55) !important;
+    padding-top: 14px;
+    word-break: keep-all;
+  }
+
+  /* ── RIGHT: 영상 ── */
+  .diff-video-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: #060912;
+    overflow: hidden;
+  }
+
+  .diff-video-wrap video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* iframe 영상 */
+  .diff-video-wrap iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  /* 영상 위 그라디언트 오버레이 */
+  .diff-video-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(15,15,15,0.3) 0%,
+      transparent 40%
+    );
+    pointer-events: none;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    .diff-section {
+      padding: 72px 28px;
+      gap: 48px;
+    }
+
+    .diff-heading {
+      letter-spacing: -1px;
+    }
+
+    .diff-body {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+
+    .diff-list {
+      padding-right: 0;
+      order: 2;
+    }
+
+    .diff-video-wrap {
+      order: 1;
+      aspect-ratio: 16/9;
+    }
+
+    .diff-item.active::before {
+      left: -28px;
+      width: 2px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .diff-section { padding: 60px 20px; }
+
+    .diff-item.active::before { left: -20px; }
+
+    .diff-item { padding: 22px 0; }
+  }
+</style>
+</head>
+<body>
+
+<section class="diff-section">
+
+  <!-- ── 헤딩 ── -->
+  <div class="diff-header">
+    <h2 class="diff-heading">Differences</h2>
+    <p class="diff-sub">
+      슈어포인트는 검증된 AI 기술과 현장 중심의 설계로<br>
+      산업 안전의 새로운 기준을 제시합니다.
+    </p>
+    <a href="#" class="diff-cta">
+      기술 더 알아보기 <span class="diff-cta-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- ── 본문: 리스트 + 영상 ── -->
+  <div class="diff-body">
+
+    <!-- LEFT: 아코디언 -->
+    <div class="diff-list">
+
+      <div class="diff-item" data-index="0">
+        <div class="diff-item-header">
+          <span class="diff-num">01</span>
+          <span class="diff-title">실시간 AI 감지</span>
+        </div>
+        <div class="diff-body-text">
+          <p>좌·우 측면 및 후방을 AI 카메라로 실시간 감지.<br>인체 인식 즉시 경보 발령.</p>
+        </div>
+      </div>
+
+      <div class="diff-item" data-index="1">
+        <div class="diff-item-header">
+          <span class="diff-num">02</span>
+          <span class="diff-title">즉시 자동 정지</span>
+        </div>
+        <div class="diff-body-text">
+          <p>독립 제동 시스템으로 지게차에 영향 없이 인체 감지 즉시 안전 정지.</p>
+        </div>
+      </div>
+
+      <div class="diff-item" data-index="2">
+        <div class="diff-item-header">
+          <span class="diff-num">03</span>
+          <span class="diff-title">브레이크 로그</span>
+        </div>
+        <div class="diff-body-text">
+          <p>자동정지 이벤트 영상·로그 저장. 최대 30일 보존 및 스마트폰 다운로드.</p>
+        </div>
+      </div>
+
+      <div class="diff-item" data-index="3">
+        <div class="diff-item-header">
+          <span class="diff-num">04</span>
+          <span class="diff-title">실시간 모니터링</span>
+        </div>
+        <div class="diff-body-text">
+          <p>관리자 PC·모바일 연결. GPS 위치 추적 지원. IP방수 설계 (IP66~IP68).</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: 영상 -->
+    <div class="diff-video-wrap">
+      <iframe
+        id="forklift-frame"
+        src="index.html"
+        frameborder="0"
+        scrolling="no"
+        allowfullscreen
+      ></iframe>
+    </div>
+
+  </div>
+
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+
+    var items = document.querySelectorAll('.diff-item');
+
+    // 첫 번째 항목 기본 활성화
+    items[0].classList.add('active');
+
+    items.forEach(function(item) {
+      item.addEventListener('click', function() {
+        var isActive = item.classList.contains('active');
+
+        // 모두 닫기
+        items.forEach(function(el) { el.classList.remove('active'); });
+
+        // 클릭한 것이 비활성이었으면 열기
+        if (!isActive) {
+          item.classList.add('active');
+        }
+      });
+    });
+
+  });
+</script>
+</body>
+</html>
